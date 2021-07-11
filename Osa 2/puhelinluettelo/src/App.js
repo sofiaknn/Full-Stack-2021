@@ -7,8 +7,8 @@ const App = () => {
   const [ newNumber, setNewNumber ] = useState('')
   const [ showAll, setShowAll ] = useState('')
   const [ newFilter, setNewFilter ] = useState('')
-  const [message, setMessage] = useState('')
-  const [errorMessage, setErrorMessage] = useState('')
+  const [message, setMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
 
   useEffect(() => {
@@ -69,6 +69,16 @@ const App = () => {
         )
         setTimeout(() => {
           setMessage(null)
+        }, 5000)
+      })
+      .catch(error => {
+        console.log(error.response.data)
+        const alarm = error.response.data
+        setErrorMessage(
+          error.response.data.error
+      )
+        setTimeout(() => {
+        setErrorMessage(null)
         }, 5000)
       })
     }
