@@ -52,14 +52,30 @@ const blogs = [
   ]
 
 describe('total likes', () => {
-  
-    test('count all the likes', () => {
-      const result = listHelper.totalLikes(blogs)
-      expect(result).toBe(36)
-    })
+
+  const listWithOneBlog = [
+    {
+      _id: '5a422aa71b54a676234d17f8',
+      title: 'Go To Statement Considered Harmful',
+      author: 'Edsger W. Dijkstra',
+      url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+      likes: 5,
+      __v: 0
+    }
+  ]
+
+  test('when list has only one blog equals the likes of that', () => {
+    const result = listHelper.totalLikes(listWithOneBlog)
+    expect(result).toBe(5)
+  })
+
+  test('count all the likes', () => {
+    const result = listHelper.totalLikes(blogs)
+    expect(result).toBe(36)
+  })
 })
 
-describe('most likes', () => {
+describe('favourite blog', () => {
   
     test('find blog with most likes', () => {
       const result = listHelper.favoriteBlog(blogs)
@@ -69,4 +85,18 @@ describe('most likes', () => {
                             likes: 12
                             })
     })
+})
+describe('most blogs', () => {
+  test('check for most blogs', () => {
+      const result = listHelper.mostBlogs(blogs)
+      expect(result).toEqual({ author: "Robert C. Martin", blogs: 3 })
+  })
+})
+
+describe('most likes', () => {
+  test('check for most likes', () => {
+      const result = listHelper.mostLikes(blogs)
+      const blog = { author: "Edsger W. Dijkstra", likes: 12 }
+      expect(result).toEqual(blog)
+  })
 })

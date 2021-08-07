@@ -77,6 +77,65 @@ describe('addition of new blog', () => {
         const contents = blogsAtEnd.map(b => b.title)
         expect(contents).toContain('Canonical string reduction')
     })
+
+    test('if likes undefined, set to 0', async () => {
+        const logUser = {
+            username: 'sofia',
+            password: 'salasana'
+        }
+        const loggedIn = await api
+            .post('/api/login')
+            .send(logUser)
+            .expect('Content-Type', /application\/json/)
+
+        const newBlog = {
+            title: 'Tuni',
+            author: 'Tampere University',
+            url: 'https://www.tuni.fi/fi',
+        }
+    
+        const checkBlog = {
+            title: 'Tuni',
+            author: 'Tampere University',
+            url: 'https://www.tuni.fi/fi',
+            likes: 0
+        }
+    
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .set('Authorization', `bearer ${loggedIn.body.token}`)
+            .expect(200)
+            .expect('Content-Type', /application\/json/)
+    
+        const response = await api.get('/api/blogs')
+        const result = response.body[response.body.length - 1]
+        expect(result.likes).toEqual(checkBlog.likes)
+    })
+
+    test('if title or url is empty', async () => {
+        const logUser = {
+            username: 'sofia',
+            password: 'salasana'
+        }
+        const loggedIn = await api
+            .post('/api/login')
+            .send(logUser)
+            .expect('Content-Type', /application\/json/)
+
+        const newBlog = {
+            title: 'Full Stack Open 2021',
+            author: 'University of Helsinki',
+            likes: 35
+        }
+    
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .set('Authorization', `bearer ${loggedIn.body.token}`)
+            .expect(400)
+    })
+
     test('if token is not provided blog is not added', async () => {
         const newBlog = {
           title: 'Testing',
